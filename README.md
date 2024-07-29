@@ -1,96 +1,67 @@
-# journal
+# Solana Journal Dapp
 
-This project is generated with the [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) generator.
+This project implements a simple journal entry system on the Solana blockchain using the Anchor framework. Users can create, update, and delete journal entries.
+
+## Smart Contract Overview
+
+The smart contract provides the following functionality:
+
+1. Create a new journal entry
+2. Update an existing journal entry
+3. Delete a journal entry
+
+### Account Structure
+
+The main account structure used in this contract is `JournalEntryState`, which stores:
+
+- `owner`: The public key of the entry owner
+- `title`: The title of the entry (max 20 characters)
+- `message`: The content of the entry (max 200 characters)
+- `entry_id`: An identifier for the entry
+
+### Instructions
+
+#### 1. Create Entry
+
+Creates a new journal entry with a given title and message.
+
+```rust
+pub fn create_entry(ctx: Context<CreateEntry>, title: String, message: String) -> Result<()>
+```
+
+#### 2. Update Entry
+
+Updates the message of an existing journal entry.
+
+```rust
+pub fn update_entry(ctx: Context<UpdateEntry>, _title: String, new_message: String) -> Result<()>
+```
+
+#### 3. Delete Entry
+
+Deletes an existing journal entry.
+
+```rust
+pub fn delete_entry(_ctx: Context<DeleteEntry>, _title: String) -> Result<()>
+```
 
 ## Getting Started
 
-### Prerequisites
+To use this smart contract, you'll need to:
 
-- Node v18.18.0 or higher
+1. Set up a Solana development environment
+2. Install the Anchor framework
+3. Deploy the contract to a Solana cluster (devnet, testnet, or mainnet)
 
-- Rust v1.77.2 or higher
-- Anchor CLI 0.30.0 or higher
-- Solana CLI 1.18.9 or higher
+## Usage
 
-### Installation
+After deploying the contract, you can interact with it using a client-side application. Here are the main operations:
 
-#### Clone the repo
+1. Create a new entry by calling `create_entry` with a title and message
+2. Update an entry by calling `update_entry` with the title and new message
+3. Delete an entry by calling `delete_entry` with the title
 
-```shell
-git clone <repo-url>
-cd <repo-name>
-```
+## Security Considerations
 
-#### Install Dependencies
-
-```shell
-npm install
-```
-
-#### Start the web app
-
-```
-npm run dev
-```
-
-## Apps
-
-### anchor
-
-This is a Solana program written in Rust using the Anchor framework.
-
-#### Commands
-
-You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the command with `npm run`, eg: `npm run anchor`.
-
-#### Sync the program id:
-
-Running this command will create a new keypair in the `anchor/target/deploy` directory and save the address to the Anchor config file and update the `declare_id!` macro in the `./src/lib.rs` file of the program.
-
-You will manually need to update the constant in `anchor/lib/counter-exports.ts` to match the new program id.
-
-```shell
-npm run anchor keys sync
-```
-
-#### Build the program:
-
-```shell
-npm run anchor-build
-```
-
-#### Start the test validator with the program deployed:
-
-```shell
-npm run anchor-localnet
-```
-
-#### Run the tests
-
-```shell
-npm run anchor-test
-```
-
-#### Deploy to Devnet
-
-```shell
-npm run anchor deploy --provider.cluster devnet
-```
-
-### web
-
-This is a React app that uses the Anchor generated client to interact with the Solana program.
-
-#### Commands
-
-Start the web app
-
-```shell
-npm run dev
-```
-
-Build the web app
-
-```shell
-npm run build
-```
+- Only the owner of an entry can update or delete it
+- Entry titles are used as seeds for PDAs (Program Derived Addresses), ensuring uniqueness per owner
